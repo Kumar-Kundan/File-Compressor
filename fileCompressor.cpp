@@ -67,16 +67,16 @@ class FileCompressor{
             minHeap.push(newNode);
         }
     }
-void print(priority_queue<Node*, vector<Node*>, Cmp> minHeap){
-    while(minHeap.size()>1){
-        Node* node=minHeap.top();
-        minHeap.pop();
+    void print(priority_queue<Node*, vector<Node*>, Cmp> minHeap){
+        while(minHeap.size()>1){
+            Node* node=minHeap.top();
+            minHeap.pop();
 
-        cout<<node->ch<<" "<<node->freq<<" ";
+            cout<<node->ch<<" "<<node->freq<<" ";
+        }
+        cout<<endl;
+        
     }
-    cout<<endl;
-    
-}
     //creating huffman tree using min heap
     Node* creatTree(){
         while(minHeap.size()>1){
@@ -121,8 +121,8 @@ void print(priority_queue<Node*, vector<Node*>, Cmp> minHeap){
     }
 
     //encode function
-    void compress(string filename){
-        readFile(filename);  //reading the file
+    void compress(string CfileName){
+        readFile(CfileName);  //reading the file
 
         countCharacter();    //counting the character
         
@@ -133,7 +133,7 @@ void print(priority_queue<Node*, vector<Node*>, Cmp> minHeap){
         encoderCode(root);   //huffman coder and decoder
     
         //writing code of each character
-        ofstream write(filename);
+        ofstream write(CfileName);
 
         if(!write.is_open()){
             cout<<"error in opening file"<<endl;
@@ -141,19 +141,19 @@ void print(priority_queue<Node*, vector<Node*>, Cmp> minHeap){
         }
         for(char ch:fileContent){
             write<<encoderChartMap[ch];
-            cout<<encoderChartMap[ch];
         }
         write.close();
+        cout<<"Compressed successfully!!!"<<endl;
     }
     //decode function
-    void decompress(string filename){
+    void decompress(string Cfilename,string DfileName){
         decoderCode();   //generating decode chart
         
         fileContent="";
-        readFile(filename);
+        readFile(Cfilename);
 
         //writing code of each character
-        ofstream write(filename);
+        ofstream write(DfileName);
 
         if(!write.is_open()){
             cout<<"error in opening file"<<endl;
@@ -167,19 +167,25 @@ void print(priority_queue<Node*, vector<Node*>, Cmp> minHeap){
                 continue;
             }
             write<<decoderChartMap[key];
-            cout<<decoderChartMap[key];
             key="";
         }
         write.close();
+        cout<<"Decompressed suuccessfully";
     }
 };
+//driver code
 int main(){
     FileCompressor rar;
-    string filename="roughFile.txt";
-    cout<<"compressed file:"<<endl;
-    rar.compress(filename);
-    cout<<endl;
-    cout<<"decompressed file:"<<endl;
-    rar.decompress(filename);
+    string Cfilename;
+    cout<<"Enter file name to compress:"<<endl;
+    cin>>Cfilename;
+    //calling compress() function
+    rar.compress(Cfilename);
+
+    string Dfilename;
+    cout<<"Enter filename in which you have to decompress:"<<endl;
+    cin>>Dfilename;
+    //calling decompress() function
+    rar.decompress(Cfilename, Dfilename);
     return 0;
 }
